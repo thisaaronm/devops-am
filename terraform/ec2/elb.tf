@@ -1,11 +1,15 @@
 ## elb.tf
 
 # --------------------------- ELASTIC LOAD BALANCERS ------------------------- #
-resource "aws_elb" "elb0" {
-  name_prefix     = "${var.elb_name_prefix}"
-  subnets         = ["${var.subpub0_id}","${var.subpub1_id}","${var.subpub2_id}"]
-  security_groups = ["${var.sg_public0_id}"]
-  listener = {
+resource "aws_elb" "elb00" {
+  name_prefix  = "elb00-"
+  subnets = [
+    "${var.subpub00_id}",
+    "${var.subpub11_id}",
+    "${var.subpub22_id}"
+  ]
+  security_groups = ["${var.sg_public00_id}"]
+  listener  = {
     lb_port           = "${var.lb_port}"
     lb_protocol       = "${var.lb_protocol}"
     instance_port     = "${var.instance_port}"
@@ -14,8 +18,8 @@ resource "aws_elb" "elb0" {
   health_check {
     healthy_threshold   = 2
     unhealthy_threshold = 2
-    timeout             = 3
+    timeout             = 5
     target              = "HTTP:80/up"
-    interval            = 30
+    interval            = 60
   }
 }

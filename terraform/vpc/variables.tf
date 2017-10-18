@@ -1,16 +1,28 @@
-## VPC module variables
+## vpc module variables
 
 # -------------------------------- VARIABLES --------------------------------- #
 variable "cidr_vpc" {
-  default = "10.20.0.0/16"
+  default = "10.99.0.0/16"
 }
 
 variable "cidr_subpub" {
   default = [
-    "10.20.0.0/24",
-    "10.20.1.0/24",
-    "10.20.2.0/24"
+    "10.99.0.0/24",
+    "10.99.1.0/24",
+    "10.99.2.0/24"
   ]
+}
+
+variable "cidr_subpriv" {
+  default = [
+    "10.99.3.0/24",
+    "10.99.4.0/24",
+    "10.99.5.0/24"
+  ]
+}
+
+variable "cidr_public" {
+  default = "0.0.0.0/0"
 }
 
 variable "az" {
@@ -21,11 +33,7 @@ variable "az" {
   ]
 }
 
-variable "cidr_public" {
-  default = "0.0.0.0/0"
-}
-
-## REPLACE WITH AUTHORIZED PUBLIC IPS IN CIDR FOR ADMINISTRATIVE ACCESS
+#### REPLACE WITH AUTHORIZED PUBLIC IPS (IN CIDR) FOR ADMINISTRATIVE ACCESS ####
 variable "cidr_secure" {
   default = [
     "0.0.0.0/0"

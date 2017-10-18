@@ -4,11 +4,13 @@
     name: httpd
     state: latest
 
+
 - name: "Start and enable httpd"
   service:
     name: httpd
     state: started
     enabled: yes
+
 
 - name: "Ensure /var/www/html/up exists"
   lineinfile:
@@ -20,6 +22,7 @@
     group: apache
     mode: 0755
 
+
 - name: "Ensure /var/www/html/index.html exists"
   lineinfile:
     path: /var/www/html/index.html
@@ -29,6 +32,7 @@
     owner: apache
     group: apache
     mode: 0755
+
 
 - name: "Add hostname(s) to /var/www/html/index.html"
   shell: >

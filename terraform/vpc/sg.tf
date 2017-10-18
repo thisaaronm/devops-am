@@ -1,11 +1,11 @@
 ## sg.tf
 
 # ----------------------------- SECURITY GROUPS ------------------------------ #
-## Assign sg_public0 to LB
-resource "aws_security_group" "sg_public0" {
-  name        = "sg_public0"
-  description = "sg_public0"
-  vpc_id      = "${aws_vpc.vpc0.id}"
+## Assign to LB
+resource "aws_security_group" "sg_public00" {
+  name        = "sg_public00"
+  description = "sg_public00"
+  vpc_id      = "${aws_vpc.vpc00.id}"
   ingress {
     from_port   = 80
     to_port     = 80
@@ -18,35 +18,24 @@ resource "aws_security_group" "sg_public0" {
     protocol    = "-1"
     cidr_blocks = ["${var.cidr_public}"]
   }
-  depends_on  = ["aws_vpc.vpc0"]
+  depends_on  = ["aws_vpc.vpc00"]
   tags {
-    Name        = "sg_public0",
-    Environment = "Development"
+    Name        = "sg_public00",
+    Environment = "Development",
+    Demo        = "devops-am"
   }
 }
 
-## Assign sg_internal0 to ASG instances
-resource "aws_security_group" "sg_internal0" {
-  name        = "sg_internal0"
-  description = "sg_internal0"
-  vpc_id      = "${aws_vpc.vpc0.id}"
+## Assigns to ASG instances
+resource "aws_security_group" "sg_internal00" {
+  name        = "sg_internal00"
+  description = "sg_internal00"
+  vpc_id      = "${aws_vpc.vpc00.id}"
   ingress {
     from_port       = 80
     to_port         = 80
     protocol        = "tcp"
-    security_groups = ["${aws_security_group.sg_public0.id}"]
-  }
-  ingress {
-    from_port   = 8
-    to_port     = 0
-    protocol    = "icmp"
-    cidr_blocks = ["${var.cidr_secure}"]
-  }
-  ingress {
-    from_port   = 22
-    to_port     = 22
-    protocol    = "tcp"
-    cidr_blocks = ["${var.cidr_secure}"]
+    security_groups = ["${aws_security_group.sg_public00.id}"]
   }
   egress {
     from_port   = 0
@@ -54,19 +43,20 @@ resource "aws_security_group" "sg_internal0" {
     protocol    = "-1"
     cidr_blocks = ["${var.cidr_public}"]
   }
-  depends_on  = ["aws_vpc.vpc0"]
+  depends_on  = ["aws_vpc.vpc00"]
   tags {
-    Name        = "sg_internal0",
-    Environment = "Development"
+    Name        = "sg_internal00",
+    Environment = "Development",
+    Demo        = "devops-am"
   }
 }
 
 
 # ----------------------------- OUTPUT VARIABLES ----------------------------- #
-output "sg_public0_id" {
-  value = "${aws_security_group.sg_public0.id}"
+output "sg_public00_id" {
+  value = "${aws_security_group.sg_public00.id}"
 }
 
-output "sg_internal0_id" {
-  value = "${aws_security_group.sg_internal0.id}"
+output "sg_internal00_id" {
+  value = "${aws_security_group.sg_internal00.id}"
 }

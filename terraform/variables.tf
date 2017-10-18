@@ -9,7 +9,7 @@ variable "aws_cred" {
   default = "~/.aws/credentials"
 }
 
-## change aws credentials profile as necessary
+## change AWS credentials profile as necessary
 variable "aws_profile" {
   default = "default"
 }
