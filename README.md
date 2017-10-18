@@ -45,7 +45,7 @@ After cloning this branch, your directory structure should look like this:
 If the above prerequisites are met, then you should be able to deploy this by simply doing:
   - git clone https://github.com/thisaaronm/devops-am.git
   - cd ~/devops-am
-  - git checkout v2
+  - git checkout priv-v2
   - ./deploy.sh
 
 A (very) high level overview of what happens when you run __deploy.sh__ is:
