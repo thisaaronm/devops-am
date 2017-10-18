@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # -------------------------------- VARIABLES --------------------------------- #
-demo_path="Desktop/devops-am"
+demo_path="devops-am"
 key_name="devops-am"
 aws_region="us-east-2"
 aws_profile="default"
@@ -127,5 +127,5 @@ f_terraform_destroy () {
 
 
 # --------------------------------- RUN IT! ---------------------------------- #
-f_keypair_check_aws
 f_terraform_destroy
+f_keypair_check_aws

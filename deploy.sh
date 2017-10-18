@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # -------------------------------- VARIABLES --------------------------------- #
-demo_path="Desktop/devops-am"
+demo_path="devops-am"
 key_name="devops-am"
 aws_region="us-east-2"
 aws_profile="default"
@@ -70,7 +70,7 @@ f_keypair_create() {
     --profile "$aws_profile" > "$HOME/$demo_path/ansible/$key_name.pem"
   echo
   echo
-  chmod 600 "$HOME/$demo_path/ansible/$key_name.pem"
+  chmod 400 "$HOME/$demo_path/ansible/$key_name.pem"
 }
 
 
@@ -93,32 +93,13 @@ f_terraform () {
 }
 
 
-## Run Ansible
-f_ansible () {
-  if [ -d "$HOME/$demo_path/ansible" ]; then
-    cd "$HOME/$demo_path/ansible"
-    rm -f hosts
-    rm -f playbooks/devops-am.retry
-    echo '[devops-am]' > hosts
-    aws ec2 describe-instances \
-    --query "Reservations[*].Instances[*].PublicIpAddress" \
-    --filters "Name=instance-state-name,Values=running" \
-    --region "$aws_region" \
-    --profile "$aws_profile" \
-    --output text >> hosts
-    ansible-playbook playbooks/devops-am.yml -v
-  else
-    echo
-    echo "I can't find $HOME/$demo_path/ansible"
-    echo "Please try again when $HOME/$demo_path/ansible is in place..."
-    echo
-    sleep 3
-    exit 30
-  fi
-}
-
-
 # --------------------------------- RUN IT! ---------------------------------- #
 f_keypair_check
 f_terraform
-f_ansible
+
+echo "If this is the first time deploy.sh has been run,"
+echo "please wait approximately 60 seconds for the initial"
+echo "ASG instances health checks to meet the 'healthy' threshold."
+echo
+echo "After that, the ELB address will load successfully."
+sleep 5

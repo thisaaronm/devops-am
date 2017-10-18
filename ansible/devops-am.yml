@@ -1,0 +1,45 @@
+---
+- hosts: 127.0.0.1
+  vars:
+    aws_region: us-east-2
+  connection: local
+  tasks:
+    - name: Delete Ansible Inventory File
+      file:
+        path: ~/ansible/hosts
+        state: absent
+
+    - name: Recreate Ansible Inventory File
+      shell: echo "[devops-am]" | tee ~/ansible/hosts
+
+    - name: Update Ansible Inventory File
+      shell: >
+        aws ec2 describe-instances
+        --query "Reservations[*].Instances[*].PrivateIpAddress"
+        --filters "Name=instance-state-name,Values=running" "Name=tag:Name,Values=asg00"
+        --region {{ aws_region }}
+        --output text | tee --append ~/ansible/hosts
+
+
+- hosts: devops-am
+  remote_user: ec2-user
+  become: yes
+  roles:
+    - common-yum
+    - devops-am
+
+
+- hosts: 127.0.0.1
+  vars:
+    aws_region: us-east-2
+  connection: local
+  tasks:
+    - name: Get ELB DNSName
+      shell: >
+        aws elb describe-load-balancers
+        --query "LoadBalancerDescriptions[*].DNSName"
+        --region {{ aws_region }}
+        --output text
+      register: elb_dns_name
+
+    - debug: msg="{{ elb_dns_name.stdout }}"
