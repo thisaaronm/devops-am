@@ -1,0 +1,9 @@
+.DS_Store
+ansible.log
+hosts
+devops-am.pem
+.terraform/
+main.tfplan
+terraform.tfstate
+terraform.tfstate.backup
+.terraform.tfstate.lock.info

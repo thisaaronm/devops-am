@@ -1,0 +1,55 @@
+---
+- name: "Install httpd"
+  yum:
+    name: httpd
+    state: latest
+
+- name: "Start and enable httpd"
+  service:
+    name: httpd
+    state: started
+    enabled: yes
+
+- name: "Ensure /var/www/html/up exists"
+  lineinfile:
+    path: /var/www/html/up
+    create: yes
+    state: present
+    line: "I'm up!"
+    owner: apache
+    group: apache
+    mode: 0755
+
+- name: "Ensure /var/www/html/index.html exists"
+  lineinfile:
+    path: /var/www/html/index.html
+    create: yes
+    state: present
+    line: "Hello World."
+    owner: apache
+    group: apache
+    mode: 0755
+
+- name: "Add hostname(s) to /var/www/html/index.html"
+  shell: >
+    echo
+    "<html>
+      <head>
+      <body>
+        <h1>
+          Hello World
+        </h1>
+        <p>
+          My name is
+          <strong>
+            $(curl -s http://169.254.169.254/latest/meta-data/local-hostname),
+          </strong>
+          but you can call me
+          <strong>
+            $(echo $HOSTNAME).
+          </strong>
+        </body>
+        </head>
+      </html>" > /var/www/html/index.html
+  args:
+    executable: /bin/bash

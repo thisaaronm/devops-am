@@ -1,0 +1,47 @@
+---
+- hosts: 127.0.0.1
+  vars:
+    aws_profile: default
+    aws_region: us-east-2
+  connection: local
+  tasks:
+    - name: Delete Ansible Inventory File
+      file:
+        path: ~/Desktop/devops-am/ansible/hosts
+        state: absent
+
+    - name: Delete DevOps-AM Playbook Retry File
+      file:
+        path: ~/Desktop/devops-am/ansible/playbooks/devops.retry
+        state: absent
+
+    - name: Recreate Ansible Inventory File
+      shell: echo '[devops-am]' > ~/Desktop/devops-am/ansible/hosts
+
+    - name: Update Ansible Inventory File
+      shell: >
+        aws ec2 describe-instances
+        --query "Reservations[*].Instances[*].PublicIpAddress"
+        --filters "Name=instance-state-name,Values=running"
+        --region {{ aws_region }}
+        --profile {{ aws_profile }}
+        --output text >> ~/Desktop/devops-am/ansible/hosts
+
+    - name: Get ELB DNSName
+      shell: >
+        aws elb describe-load-balancers
+        --query "LoadBalancerDescriptions[*].DNSName"
+        --region {{ aws_region }}
+        --profile {{ aws_profile }}
+        --output text
+      register: elb_dns_name
+
+    - debug: msg="{{ elb_dns_name.stdout }}"
+
+
+- hosts: devops-am
+  remote_user: ec2-user
+  become: yes
+  roles:
+    - common-yum
+    - devops-am
